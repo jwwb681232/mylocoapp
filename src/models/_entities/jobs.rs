@@ -16,8 +16,8 @@ pub struct Model {
     #[sea_orm(column_type = "Text")]
     pub description: String,
     pub demand: i32,
-    pub start_time: DateTime,
-    pub end_time: DateTime,
+    pub start_time: DateTimeWithTimeZone,
+    pub end_time: DateTimeWithTimeZone,
     pub hourly_rate: Decimal,
     pub required_gender: i16,
     pub required_ages: Json,
