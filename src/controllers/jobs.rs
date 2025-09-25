@@ -6,9 +6,11 @@ use crate::models::jobs::ActiveModel;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use validator::Validate;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize,Validate)]
 pub struct Params {
+    #[validate(range(min = 10, max = 20, message = "must be between 10 and 20"))]
     pub employer_admin_id: i32,
     pub industry_id: i32,
     pub title: String,
@@ -42,7 +44,7 @@ impl Params {
     }
 }
 
-pub async fn add(State(ctx): State<AppContext>, Json(params): Json<Params>) -> Result<Response> {
+pub async fn add(State(ctx): State<AppContext>, JsonValidateWithMessage(params): JsonValidateWithMessage<Params>) -> Result<Response> {
     let mut item: ActiveModel = Default::default();
     params.update(&mut item);
     let item = item.insert(&ctx.db).await?;
