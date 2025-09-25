@@ -161,7 +161,11 @@ async fn login(State(ctx): State<AppContext>, Json(params): Json<LoginParams>) -
 
 #[debug_handler]
 async fn current(auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Response> {
-    let user = users::Model::find_by_pid(&ctx.db, &auth.claims.pid).await?;
+    let user = users::Model::find_by_pid(&ctx.db, &auth.claims.pid).await/*.map_err(|e| match e {
+        ModelError::EntityNotFound => loco_rs::Error::NotFound,
+        _ => loco_rs::Error::Model(e.into()),
+    })*/?;
+
     format::json(CurrentResponse::new(&user))
 }
 
