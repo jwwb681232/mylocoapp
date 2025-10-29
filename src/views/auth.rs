@@ -6,6 +6,7 @@ use crate::models::_entities::users;
 pub struct LoginResponse {
     pub token: String,
     pub pid: String,
+    pub api_key: String,
     pub name: String,
     pub is_verified: bool,
 }
@@ -16,6 +17,7 @@ impl LoginResponse {
         Self {
             token: token.to_string(),
             pid: user.pid.to_string(),
+            api_key: user.api_key.to_string(),
             name: user.name.clone(),
             is_verified: user.email_verified_at.is_some(),
         }

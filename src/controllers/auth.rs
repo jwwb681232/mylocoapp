@@ -169,6 +169,11 @@ async fn current(auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Respo
     format::json(CurrentResponse::new(&user))
 }
 
+#[debug_handler]
+async fn current_api(auth: auth::ApiToken<users::Model>, State(_ctx): State<AppContext>) -> Result<Response> {
+    format::json(CurrentResponse::new(&auth.user))
+}
+
 /// Magic link authentication provides a secure and passwordless way to log in to the application.
 ///
 /// # Flow
@@ -272,6 +277,7 @@ pub fn routes() -> Routes {
         .add("/forgot", post(forgot))
         .add("/reset", post(reset))
         .add("/current", get(current))
+        .add("/current-api", get(current_api))
         .add("/magic-link", post(magic_link))
         .add("/magic-link/{token}", get(magic_link_verify))
         .add("/resend-verification-mail", post(resend_verification_email))
