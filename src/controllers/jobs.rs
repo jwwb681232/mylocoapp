@@ -44,7 +44,7 @@ impl Params {
     }
 }
 
-pub async fn add(State(ctx): State<AppContext>, JsonValidateWithMessage(params): JsonValidateWithMessage<Params>) -> Result<Response> {
+pub async fn add(auth: auth::JWT, State(ctx): State<AppContext>, JsonValidateWithMessage(params): JsonValidateWithMessage<Params>) -> Result<Response> {
     let mut item: ActiveModel = Default::default();
     params.update(&mut item);
     let item = item.insert(&ctx.db).await?;
@@ -56,7 +56,6 @@ pub async fn list(State(ctx): State<AppContext>) -> Result<Response> {
     let res = jobs::Entity::find().all(&ctx.db).await?;
     format::json(res)
 }
-
 
 pub fn routes() -> Routes {
     Routes::new()
