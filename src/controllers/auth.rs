@@ -101,7 +101,7 @@ async fn forgot(
     Json(params): Json<ForgotParams>,
 ) -> Result<Response> {
     let Ok(user) = users::Model::find_by_email(&ctx.db, &params.email).await else {
-        // we don't want to expose our users email. if the email is invalid we still
+        // we don't want to expose our users email. if the email is invalid we're still
         // returning success to the caller
         return format::json(());
     };
@@ -120,7 +120,7 @@ async fn forgot(
 #[debug_handler]
 async fn reset(State(ctx): State<AppContext>, Json(params): Json<ResetParams>) -> Result<Response> {
     let Ok(user) = users::Model::find_by_reset_token(&ctx.db, &params.token).await else {
-        // we don't want to expose our users email. if the email is invalid we still
+        // we don't want to expose our users email. if the email is invalid we're still
         // returning success to the caller
         tracing::info!("reset token not found");
 
@@ -202,7 +202,7 @@ async fn magic_link(
     }
 
     let Ok(user) = users::Model::find_by_email(&ctx.db, &params.email).await else {
-        // we don't want to expose our users email. if the email is invalid we still
+        // we don't want to expose our users email. if the email is invalid we're still
         // returning success to the caller
         tracing::debug!(email = params.email, "user not found by email");
         return format::empty_json();
@@ -220,7 +220,7 @@ async fn magic_link_verify(
     State(ctx): State<AppContext>,
 ) -> Result<Response> {
     let Ok(user) = users::Model::find_by_magic_token(&ctx.db, &token).await else {
-        // we don't want to expose our users email. if the email is invalid we still
+        // we don't want to expose our users email. if the email is invalid we're still
         // returning success to the caller
         return unauthorized("unauthorized!");
     };
